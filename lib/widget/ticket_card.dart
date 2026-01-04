@@ -1,4 +1,4 @@
-import 'package:bkey_user/theme/app_colors.dart';
+import 'package:bkey_user/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class TicketCard extends StatelessWidget {
@@ -118,7 +118,7 @@ class TicketCard extends StatelessWidget {
                             // Source City
                             Text(
                               sourceCity.toUpperCase(),
-                              style: TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w400),
+                              style: TextStyle(color: AppColors.primary, fontSize: 14, fontWeight: FontWeight.w400),
                             ),
                             const SizedBox(height: 2),
                             Text(
@@ -140,7 +140,7 @@ class TicketCard extends StatelessWidget {
                             // Destination City
                             Text(
                               destinationCity.toUpperCase(),
-                              style: TextStyle(color: AppColors.primary, fontSize: 16, fontWeight: FontWeight.w400),
+                              style: TextStyle(color: AppColors.primary, fontSize: 14, fontWeight: FontWeight.w400),
                             ),
                             const SizedBox(height: 2),
                             Text(

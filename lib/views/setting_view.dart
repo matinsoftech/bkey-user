@@ -1,10 +1,25 @@
-import 'package:bkey_user/theme/app_colors.dart';
+import 'package:bkey_user/app_colors.dart';
+import 'package:bkey_user/services/user_services.dart';
 import 'package:bkey_user/widget/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-class SettingScreen extends StatelessWidget {
+class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
+
+  @override
+  State<SettingScreen> createState() => _SettingScreenState();
+}
+
+class _SettingScreenState extends State<SettingScreen> {
+  String? userName;
+  String? userEmail;
+  @override
+  initState() {
+    super.initState();
+    userName = UserStorage.userName();
+    userEmail = UserStorage.userEmail();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,8 +50,8 @@ class SettingScreen extends StatelessWidget {
                   Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text('Juliana Carter', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                      Text('juliana@example.com', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
+                      Text('$userName', style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                      Text('$userEmail', style: TextStyle(fontSize: 14, color: Colors.grey[600])),
                       Container(
                         margin: const EdgeInsets.only(top: 4),
                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
@@ -99,9 +114,15 @@ class SettingScreen extends StatelessWidget {
 
             // Account Actions
             _buildSettingsCard([
-              _buildSettingItem(Icons.logout, 'Log Out', isLogout: true,onTap: () {
-                context.go('/started');
-              }),
+              _buildSettingItem(
+                Icons.logout,
+                'Log Out',
+                isLogout: true,
+                onTap: () {
+                  UserStorage.clear();
+                  context.go('/started');
+                },
+              ),
               _buildSettingItem(Icons.delete_outline, 'Delete Account', isDelete: true, showDivider: false),
             ]),
           ],
@@ -113,10 +134,7 @@ class SettingScreen extends StatelessWidget {
   Widget _buildSectionTitle(String title) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 12.0),
-      child: Text(
-        title,
-        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87),
-      ),
+      child: Text(title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: Colors.black87)),
     );
   }
 
@@ -146,9 +164,10 @@ class SettingScreen extends StatelessWidget {
     return Column(
       children: [
         ListTile(
-          leading: imagePath != null
-              ? Image.asset(imagePath, width: 24, height: 24, color: iconColor)
-              : Icon(icon, color: iconColor),
+          leading:
+              imagePath != null
+                  ? Image.asset(imagePath, width: 24, height: 24, color: iconColor)
+                  : Icon(icon, color: iconColor),
           title: Text(title, style: TextStyle(color: textColor, fontSize: 16)),
           trailing: Icon(Icons.arrow_forward_ios, size: 20, color: iconColor),
           onTap: onTap,

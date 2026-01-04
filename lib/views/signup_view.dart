@@ -1,6 +1,9 @@
+import 'package:bkey_user/api_services.dart';
+import 'package:bkey_user/controllers/signup_controller.dart';
+import 'package:bkey_user/models/signup_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../theme/app_colors.dart';
+import '../app_colors.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -15,15 +18,14 @@ class _SignupScreenState extends State<SignupScreen> {
   final _passwordController = TextEditingController();
   bool _obscurePassword = true;
   final _fullNameController = TextEditingController();
-  final _confirmPasswordController = TextEditingController();
-  bool _obscureConfirmPassword = true;
+  final _phoneNumberController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
     _passwordController.dispose();
     _fullNameController.dispose();
-    _confirmPasswordController.dispose();
+    _phoneNumberController.dispose();
     super.dispose();
   }
 
@@ -159,6 +161,41 @@ class _SignupScreenState extends State<SignupScreen> {
                           },
                         ),
                         const SizedBox(height: 16),
+                        // Confirm Password field
+                        TextFormField(
+                          keyboardType: TextInputType.phone,
+                          controller: _phoneNumberController,
+                          decoration: InputDecoration(
+                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
+                            hintText: 'Phone Number',
+                            hintStyle: TextStyle(color: Colors.grey[400]),
+                            filled: true,
+                            fillColor: Colors.grey[100],
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide.none,
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                              borderSide: BorderSide(color: AppColors.primary, width: 2),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your phone number';
+                            }
+                            if (value.length != 10 || int.tryParse(value) == null) {
+                              return 'Please enter a valid 10-digit phone number';
+                            }
+
+                            return null;
+                          },
+                        ),
+                        const SizedBox(height: 16),
                         // Password field
                         TextFormField(
                           controller: _passwordController,
@@ -204,58 +241,54 @@ class _SignupScreenState extends State<SignupScreen> {
                             return null;
                           },
                         ),
-                        const SizedBox(height: 16),
-                        // Confirm Password field
-                        TextFormField(
-                          controller: _confirmPasswordController,
-                          obscureText: _obscureConfirmPassword,
-                          decoration: InputDecoration(
-                            contentPadding: EdgeInsets.symmetric(horizontal: 12),
-
-                            hintText: 'Confirm Password',
-                            hintStyle: TextStyle(color: Colors.grey[400]),
-                            filled: true,
-                            fillColor: Colors.grey[100],
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
-                            ),
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide.none,
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                              borderSide: BorderSide(color: AppColors.primary, width: 2),
-                            ),
-                            suffixIcon: IconButton(
-                              icon: Icon(
-                                _obscureConfirmPassword ? Icons.visibility_off : Icons.visibility,
-                                color: Colors.grey[600],
-                              ),
-                              onPressed: () {
-                                setState(() {
-                                  _obscureConfirmPassword = !_obscureConfirmPassword;
-                                });
-                              },
-                            ),
-                          ),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please confirm your password';
-                            }
-                            if (value != _passwordController.text) {
-                              return 'Passwords do not match';
-                            }
-                            return null;
-                          },
-                        ),
                         const SizedBox(height: 32),
-                        // Register button
+
                         ElevatedButton(
-                          onPressed: () {
-                            if (_formKey.currentState!.validate()) {
-                              // Handle registration
+                          onPressed: () async {
+                            if (!_formKey.currentState!.validate()) return;
+
+                            // Create controller instance
+                            final signupController = SignupController(apiService: ApiService());
+
+                            // Build request
+                            final request = SignupRequest(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                              name: _fullNameController.text,
+                              phone: _phoneNumberController.text,
+                            );
+
+                            // Show loading dialog while registering
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const Center(child: CircularProgressIndicator(color: AppColors.primary)),
+                            );
+
+                            // Perform signup
+                            final success = await signupController.signup(request);
+
+                            // Hide loading
+                            if (mounted) Navigator.of(context).pop();
+
+                            // Handle result
+                            if (success) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Registration successful!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              // Navigate to BottomNav
+                              if (mounted) context.go('/bottom-nav');
+                              
+                            } else {
+                              // Show error message
+                              if (mounted && signupController.errorMessage != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(signupController.errorMessage!), backgroundColor: Colors.red),
+                                );
+                              }
                             }
                           },
                           style: ElevatedButton.styleFrom(

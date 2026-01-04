@@ -1,14 +1,14 @@
-import 'package:bkey_user/services/onboarding_storage.dart';
-import 'package:bkey_user/theme/app_colors.dart';
+import 'package:bkey_user/app_colors.dart';
+import 'package:bkey_user/controllers/onboarding_controller.dart';
+import 'package:bkey_user/services/onboarding_services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'onboarding_bloc.dart';
-import 'onboarding_event.dart';
-import 'onboarding_state.dart';
 
 class OnboardingScreen extends StatelessWidget {
+  OnboardingScreen({super.key});
+
   final PageController _pageController = PageController();
 
   final List<Map<String, String>> onboardingData = [
@@ -29,22 +29,22 @@ class OnboardingScreen extends StatelessWidget {
     },
   ];
 
-  OnboardingScreen({super.key});
-
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => OnboardingBloc(),
-      child: BlocConsumer<OnboardingBloc, OnboardingState>(
-        listener: (context, state) {
-          _pageController.animateToPage(
-            state.currentPage,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
-        },
-        builder: (context, state) {
-          final bloc = context.read<OnboardingBloc>();
+    return ChangeNotifierProvider(
+      create: (_) => OnboardingController(totalPages: onboardingData.length),
+      child: Consumer<OnboardingController>(
+        builder: (context, controller, _) {
+          // Animate page when current page changes
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (_pageController.hasClients) {
+              _pageController.animateToPage(
+                controller.currentPage,
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeInOut,
+              );
+            }
+          });
 
           return Scaffold(
             backgroundColor: const Color.fromRGBO(255, 255, 255, 1),
@@ -64,10 +64,9 @@ class OnboardingScreen extends StatelessWidget {
                       controller: _pageController,
                       itemCount: onboardingData.length,
                       onPageChanged: (index) {
-                        // Only update BLoC state, don't trigger animation
-                        final currentState = bloc.state;
-                        if (index != currentState.currentPage) {
-                          bloc.add(index > currentState.currentPage ? NextPageEvent() : PreviousPageEvent());
+                        // Only update controller state, don't trigger animation
+                        if (index != controller.currentPage) {
+                          controller.setCurrentPage(index);
                         }
                       },
                       physics: const NeverScrollableScrollPhysics(), // Disable manual swiping
@@ -96,8 +95,6 @@ class OnboardingScreen extends StatelessWidget {
                                   ),
                                 ),
                               ),
-
-                              // const SizedBox(height: 60),
                               // Card with content
                               Container(
                                 padding: const EdgeInsets.all(24),
@@ -133,11 +130,11 @@ class OnboardingScreen extends StatelessWidget {
                                       width: double.infinity,
                                       child: ElevatedButton(
                                         onPressed: () async {
-                                          if (state.isLastPage) {
-                                            await OnboardingStorage.setShown();
+                                          if (controller.isLastPage) {
+                                            await OnboardingManager.setShown();
                                             context.go('/started');
                                           } else {
-                                            bloc.add(NextPageEvent());
+                                            controller.nextPage();
                                           }
                                         },
                                         style: ElevatedButton.styleFrom(
@@ -148,7 +145,7 @@ class OnboardingScreen extends StatelessWidget {
                                           elevation: 0,
                                         ),
                                         child: Text(
-                                          state.isLastPage ? "Get Started" : "Next",
+                                          controller.isLastPage ? "Get Started" : "Next",
                                           style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                                         ),
                                       ),
@@ -159,10 +156,9 @@ class OnboardingScreen extends StatelessWidget {
                                       width: double.infinity,
                                       child: OutlinedButton(
                                         onPressed: () async {
-                                          await OnboardingStorage.setShown();
+                                          await OnboardingManager.setShown();
                                           context.go('/started');
                                         },
-
                                         style: OutlinedButton.styleFrom(
                                           foregroundColor: AppColors.primary,
                                           side: BorderSide.none,

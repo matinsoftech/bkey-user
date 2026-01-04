@@ -1,8 +1,8 @@
-import 'package:bkey_user/home/home_screen.dart';
-import 'package:bkey_user/notification/notification_screen.dart';
-import 'package:bkey_user/setting/setting_screen.dart';
-import 'package:bkey_user/theme/app_colors.dart';
-import 'package:bkey_user/ticket/ticket_screen.dart';
+import 'package:bkey_user/views/home_view.dart';
+import 'package:bkey_user/views/notification_view.dart';
+import 'package:bkey_user/views/setting_view.dart';
+import 'package:bkey_user/app_colors.dart';
+import 'package:bkey_user/views/ticket_view.dart';
 import 'package:flutter/material.dart';
 
 class BottomNav extends StatefulWidget {
@@ -16,6 +16,31 @@ class _TabNavigationState extends State<BottomNav> {
   int _currentIndex = 0;
 
   final _pages = const [HomeScreen(), TicketScreen(), NotificationScreen(), SettingScreen()];
+
+  @override
+  void initState() {
+    super.initState();
+    // Show the message when the screen loads
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _showUnderConstructionMessage();
+    });
+  }
+
+  void _showUnderConstructionMessage() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: const Text(
+          'Our app is currently under development. All features will be available soon!',
+          style: TextStyle(fontSize: 14),
+        ),
+        duration: const Duration(seconds: 15), // lasts 15 seconds
+        backgroundColor: Colors.blueGrey.shade900,
+        behavior: SnackBarBehavior.floating,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      ),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +75,13 @@ class _TabNavigationState extends State<BottomNav> {
 
     return Expanded(
       child: InkWell(
-        onTap: () => setState(() => _currentIndex = index),
+        onTap: () {
+          _showUnderConstructionMessage();
+          setState(() {
+            _currentIndex = index;
+          });
+          
+        },
         borderRadius: BorderRadius.circular(12),
         child: Container(
           padding: const EdgeInsets.symmetric(vertical: 8.0),

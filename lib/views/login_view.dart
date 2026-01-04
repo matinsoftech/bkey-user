@@ -1,6 +1,9 @@
+import 'package:bkey_user/api_services.dart';
+import 'package:bkey_user/controllers/login_controller.dart';
+import 'package:bkey_user/models/signup_model.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import '../theme/app_colors.dart';
+import '../app_colors.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -208,6 +211,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             ),
                             TextButton(
                               onPressed: () {
+                                
                                 context.push('/forgot-password');
                               },
                               child: Text(
@@ -220,13 +224,52 @@ class _LoginScreenState extends State<LoginScreen> {
                         const SizedBox(height: 32),
                         // Sign In button
                         ElevatedButton(
-                          onPressed: () {
-                            // if (_formKey.currentState!.validate()) {
-                            //   // Handle login
-                            // }
-                            
-                            context.go('/bottom-nav');
+                           onPressed: () async {
+                            if (!_formKey.currentState!.validate()) return;
 
+                            // Create controller instance
+                            final loginController = LoginController(apiService: ApiService());
+
+                            // Build request
+                            final request = SignupRequest(
+                              email: _emailController.text,
+                              password: _passwordController.text,
+                            );
+
+                            // Show loading dialog while registering
+                            showDialog(
+                              context: context,
+                              barrierDismissible: false,
+                              builder: (_) => const Center(child: CircularProgressIndicator(
+                                color: AppColors.primary,
+                              )),
+                            );
+
+                            // Perform signup
+                            final success = await loginController.login(request);
+
+                            // Hide loading
+                            if (mounted) Navigator.of(context).pop();
+
+                            // Handle result
+                            if (success) {
+                              // Navigate to BottomNav
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Login successful!'),
+                                  backgroundColor: Colors.green,
+                                ),
+                              );
+                              if (mounted) context.go('/bottom-nav');
+
+                            } else {
+                              // Show error message
+                              if (mounted && loginController.errorMessage != null) {
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text(loginController.errorMessage!), backgroundColor: Colors.red),
+                                );
+                              }
+                            }
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.primary,

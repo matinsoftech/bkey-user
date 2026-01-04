@@ -1,8 +1,8 @@
-import 'package:bkey_user/theme/app_colors.dart';
+import 'package:bkey_user/app_colors.dart';
+import 'package:bkey_user/services/user_services.dart';
 import 'package:bkey_user/widget/banner_section.dart';
 import 'package:bkey_user/widget/ticket_card.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -10,30 +10,40 @@ class HomeScreen extends StatefulWidget {
   @override
   State<HomeScreen> createState() => _HomeScreenState();
 }
+// static String? userName() {
+//     final user = getUser();
+//     return user != null ? user['name'] as String? : null;
+//   }
 
 class _HomeScreenState extends State<HomeScreen> {
   String selectedTimeOption = 'Today';
+  String? userName;
 
+  @override
+  initState() {
+    super.initState();
+    userName = UserStorage.userName();
+  }
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> tickets = [
       {
-        'pnrNumber': 'ABC123456789',
-        'boardingPoint': 'New Sangavi',
-        'boardingAddress': 'Pick up near Sangavi Phata New Sangavi - Pick up near Sangavi Phata',
-        'boardingContact': '9595951132, 9028298789',
-        'dropPoint': 'DeepNagar',
-        'dropAddress': 'DeepNagar, Main Road',
-        'sourceCity': 'PUNE',
-        'destinationCity': 'PATNA',
-        'departureTime': '8:05 PM',
-        'arrivalTime': '6:30 AM',
+        'pnrNumber': 'BKY778899100',
+        'boardingPoint': 'Bargachhi',
+        'boardingAddress': 'Bkey Travels Office, Near Bargachhi Chowk, Biratnagar',
+        'boardingContact': '9801234567, 021-515151',
+        'dropPoint': 'Kalanki',
+        'dropAddress': 'Kalanki Bus Stop, Kathmandu',
+        'sourceCity': 'BIRATNAGAR',
+        'destinationCity': 'KATHMANDU',
+        'departureTime': '7:30 PM',
+        'arrivalTime': '6:00 AM',
         'departureDate': 'Sun, 13 Jan',
         'arrivalDate': 'Mon, 14 Jan',
-        'operatorName': 'Sangitam Travels',
-        'busType': '2X1 (30) A/C SLEEPER',
+        'operatorName': 'Bkey Travels',
+        'busType': '2X1 (30) LUXURY AC SLEEPER',
         'seatCount': 1,
-        'seatNumbers': 'A12',
+        'seatNumbers': 'A5',
       },
     ];
     final List<BannerItem> localBanners = [
@@ -88,10 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                   // SizedBox(height: 5),
-                  Text(
-                    "Hey Kabya!",
-                    style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w300),
-                  ),
+                  Text("Hey ${userName ?? 'User'}", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w300)),
                   Text(
                     "Where are you going?",
                     style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
@@ -229,29 +236,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     )
                   else
                     Column(
-                      children: tickets.map((ticket) {
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 10),
-                          child: TicketCard(
-                            pnrNumber: ticket['pnrNumber'],
-                            boardingPoint: ticket['boardingPoint'],
-                            boardingAddress: ticket['boardingAddress'],
-                            boardingContact: ticket['boardingContact'],
-                            dropPoint: ticket['dropPoint'],
-                            dropAddress: ticket['dropAddress'],
-                            sourceCity: ticket['sourceCity'],
-                            destinationCity: ticket['destinationCity'],
-                            departureTime: ticket['departureTime'],
-                            arrivalTime: ticket['arrivalTime'],
-                            departureDate: ticket['departureDate'],
-                            arrivalDate: ticket['arrivalDate'],
-                            operatorName: ticket['operatorName'],
-                            busType: ticket['busType'],
-                            seatCount: ticket['seatCount'],
-                            seatNumbers: ticket['seatNumbers'],
-                          ),
-                        );
-                      }).toList(),
+                      children:
+                          tickets.map((ticket) {
+                            return Padding(
+                              padding: const EdgeInsets.only(bottom: 10),
+                              child: TicketCard(
+                                pnrNumber: ticket['pnrNumber'],
+                                boardingPoint: ticket['boardingPoint'],
+                                boardingAddress: ticket['boardingAddress'],
+                                boardingContact: ticket['boardingContact'],
+                                dropPoint: ticket['dropPoint'],
+                                dropAddress: ticket['dropAddress'],
+                                sourceCity: ticket['sourceCity'],
+                                destinationCity: ticket['destinationCity'],
+                                departureTime: ticket['departureTime'],
+                                arrivalTime: ticket['arrivalTime'],
+                                departureDate: ticket['departureDate'],
+                                arrivalDate: ticket['arrivalDate'],
+                                operatorName: ticket['operatorName'],
+                                busType: ticket['busType'],
+                                seatCount: ticket['seatCount'],
+                                seatNumbers: ticket['seatNumbers'],
+                              ),
+                            );
+                          }).toList(),
                     ),
                   Align(
                     alignment: Alignment.centerLeft,

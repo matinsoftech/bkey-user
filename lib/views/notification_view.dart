@@ -1,4 +1,4 @@
-import 'package:bkey_user/theme/app_colors.dart';
+import 'package:bkey_user/app_colors.dart';
 import 'package:bkey_user/widget/app_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
