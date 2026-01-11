@@ -1,6 +1,6 @@
 name: bkey_user
 description: "A new Flutter project."
-version: 1.0.0+1
+version: 7.6.7+17
 
 environment:
   sdk: ">=3.7.0 <4.0.0"

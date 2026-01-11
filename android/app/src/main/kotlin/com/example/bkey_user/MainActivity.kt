@@ -1,4 +1,4 @@
-package com.example.bkey_user
+package com.mspos.ms
 
 import io.flutter.embedding.android.FlutterActivity
 
