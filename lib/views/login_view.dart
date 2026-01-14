@@ -45,7 +45,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 230,
                       height: 250,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/images/fin.png'), fit: BoxFit.cover),
+                        image: DecorationImage(image: AssetImage('assets/images/bubble 02.png'), fit: BoxFit.cover),
                       ),
                     ),
                   ),
@@ -56,7 +56,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 170,
                       height: 180,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/images/ellipse.png'), fit: BoxFit.cover),
+                        image: DecorationImage(image: AssetImage('assets/images/Ellipse 2773.png'), fit: BoxFit.cover),
                       ),
                     ),
                   ),
@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 60,
                       height: 190,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/images/fin1.png'), fit: BoxFit.cover),
+                        image: DecorationImage(image: AssetImage('assets/images/bubble 01.png'), fit: BoxFit.cover),
                       ),
                     ),
                   ),
@@ -78,7 +78,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       width: 40,
                       height: 95,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/images/fin2.png'), fit: BoxFit.cover),
+                        image: DecorationImage(image: AssetImage('assets/images/bubble 03.png'), fit: BoxFit.cover),
                       ),
                     ),
                   ),

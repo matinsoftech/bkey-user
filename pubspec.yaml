@@ -27,10 +27,10 @@ dev_dependencies:
 flutter_launcher_icons:
   android: true
   ios: true
-  image_path: "assets/images/bkey.png"
+  image_path: "assets/images/bkey-get.png"
   background_color: "#005842"
   adaptive_icon_background: "#005842"
-  adaptive_icon_foreground: "assets/images/bkey.png"
+  adaptive_icon_foreground: "assets/images/bkey-get.png"
   remove_alpha_ios: true
 
 

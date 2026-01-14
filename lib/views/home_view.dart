@@ -3,6 +3,7 @@ import 'package:bkey_user/services/user_services.dart';
 import 'package:bkey_user/widget/banner_section.dart';
 import 'package:bkey_user/widget/ticket_card.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -18,19 +19,26 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   String selectedTimeOption = 'Today';
   String? userName;
+  bool isBoardingEditing = false;
+  bool isDestinationEditing = false;
+
+  final TextEditingController boardingController = TextEditingController();
+  final TextEditingController destinationController = TextEditingController();
 
   @override
   initState() {
     super.initState();
     userName = UserStorage.userName();
   }
+
   @override
   Widget build(BuildContext context) {
     final List<Map<String, dynamic>> tickets = [
       {
         'pnrNumber': 'BKY778899100',
         'boardingPoint': 'Bargachhi',
-        'boardingAddress': 'Bkey Travels Office, Near Bargachhi Chowk, Biratnagar',
+        'boardingAddress':
+            'Bkey Travels Office, Near Bargachhi Chowk, Biratnagar',
         'boardingContact': '9801234567, 021-515151',
         'dropPoint': 'Kalanki',
         'dropAddress': 'Kalanki Bus Stop, Kathmandu',
@@ -82,10 +90,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
                   stops: [0.0, 0.65, 0.65, 1.0],
-                  colors: [Colors.white, Colors.white, AppColors.primary, AppColors.primary],
+                  colors: [
+                    Colors.white,
+                    Colors.white,
+                    AppColors.primary,
+                    AppColors.primary,
+                  ],
                 ),
               ),
-              padding: const EdgeInsets.only(top: 24, left: 16, right: 16, bottom: 10),
+              padding: const EdgeInsets.only(
+                top: 24,
+                left: 16,
+                right: 16,
+                bottom: 10,
+              ),
               child: Column(
                 children: [
                   SizedBox(height: 10),
@@ -94,19 +112,38 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: SizedBox(
                       width: 50,
                       height: 50,
-                      child: ClipOval(child: Image.asset('assets/images/bus_illustration.png', fit: BoxFit.cover)),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/bus_illustration.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   ),
                   // SizedBox(height: 5),
-                  Text("Hey ${userName ?? 'User'}", style: TextStyle(fontSize: 20, color: Colors.white, fontWeight: FontWeight.w300)),
+                  Text(
+                    "Hey ${userName ?? 'User'}",
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.white,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
                   Text(
                     "Where are you going?",
-                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
                   ),
                   Image.asset('assets/images/bus.png', height: 90, width: 90),
                   Container(
                     padding: const EdgeInsets.all(24),
-                    decoration: BoxDecoration(color: const Color(0xFFFFF9C4), borderRadius: BorderRadius.circular(24)),
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFFFF9C4),
+                      borderRadius: BorderRadius.circular(24),
+                    ),
                     child: Column(
                       children: [
                         // Boarding From Field
@@ -115,57 +152,225 @@ class _HomeScreenState extends State<HomeScreen> {
                             Column(
                               children: [
                                 // Boarding From Field
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          'Boarding From',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: AppColors.primary,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isBoardingEditing = true;
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 48,
+                                    child: Container(
+                                      // height: 48,
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        // vertical: 12,
                                       ),
-                                    ],
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child:
+                                          isBoardingEditing
+                                              // ? SizedBox(
+                                              //   height: 20,
+                                              ? TextField(
+                                                  controller:
+                                                  boardingController,
+                                                  autofocus: true,
+                                                  textAlignVertical: TextAlignVertical.center,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                  decoration:
+                                                      const InputDecoration(
+                                                        hintText:
+                                                            'Boarding From',
+                                                        isDense: true,
+                                                        contentPadding:
+                                                            EdgeInsets.symmetric(vertical: 12),
+                                                        border:
+                                                            InputBorder.none,
+                                                      ),
+                                                  onSubmitted: (_) {
+                                                    setState(() {
+                                                      isBoardingEditing = false;
+                                                    });
+                                                  },
+                                                // ),
+                                              )
+                                              // ? TextField(
+                                              //   controller: boardingController,
+                                              //   autofocus: true,
+                                              //   decoration: const InputDecoration(
+                                              //     hintText: 'Boarding From',
+                                              //     border: InputBorder.none,
+                                              //   ),
+                                              //   onSubmitted: (_) {
+                                              //     setState(() {
+                                              //       isBoardingEditing = false;
+                                              //     });
+                                              //   },
+                                              // )
+                                              : Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Text(
+                                                  boardingController.text.isEmpty
+                                                    ? 'Boarding From'
+                                                    : boardingController.text,
+                                                  style: const TextStyle(
+                                                    fontSize: 16,
+                                                    color: AppColors.primary,
+                                                    fontWeight: FontWeight.w500,
+                                                  ),
+                                                ),
+                                              ),
+                                    ),
                                   ),
                                 ),
+                                // Container(
+                                //   padding: const EdgeInsets.symmetric(
+                                //     horizontal: 16,
+                                //     vertical: 12,
+                                //   ),
+                                //   decoration: BoxDecoration(
+                                //     color: Colors.white,
+                                //     borderRadius: BorderRadius.circular(8),
+                                //   ),
+                                //   child: const Row(
+                                //     children: [
+                                //       Expanded(
+                                //         child: Text(
+                                //           'Boarding From',
+                                //           style: TextStyle(
+                                //             fontSize: 16,
+                                //             color: AppColors.primary,
+                                //             fontWeight: FontWeight.w500,
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                                 const SizedBox(height: 16),
 
                                 // Where are you going Field
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
-                                  child: const Row(
-                                    children: [
-                                      Expanded(
-                                        child: Text(
-                                          'Where are you going?',
-                                          style: TextStyle(
-                                            fontSize: 16,
-                                            color: AppColors.primary,
-                                            fontWeight: FontWeight.w500,
-                                          ),
-                                        ),
+                                GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      isDestinationEditing = true;
+                                    });
+                                  },
+                                  child: SizedBox(
+                                    width: double.infinity,
+                                    height: 48,
+                                    child: Container(
+                                      padding: const   EdgeInsets.symmetric(
+                                        horizontal: 16,
+                                        vertical: 12,
                                       ),
-                                    ],
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                      child:
+                                          isDestinationEditing
+                                              ? SizedBox(
+                                              height: 20,
+                                              child: TextField(
+                                                controller: destinationController,
+                                                autofocus: true,
+                                                textAlignVertical: TextAlignVertical.center,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                                decoration:
+                                                    const InputDecoration(
+                                                      hintText:
+                                                          'Where are you going?',
+                                                      isDense: true,
+                                                      contentPadding:
+                                                          EdgeInsets.zero,
+                                                      border: InputBorder.none,
+                                                    ),
+                                                onSubmitted: (_) {
+                                                  setState(() {
+                                                    isDestinationEditing = false;
+                                                  });
+                                                },
+                                              ),
+                                            )
+                                            // ? TextField(
+                                            //   controller: destinationController,
+                                            //   autofocus: true,
+                                            //   decoration: const InputDecoration(
+                                            //     hintText:
+                                            //         'Where are you going?',
+                                            //     border: InputBorder.none,
+                                            //   ),
+                                            //   onSubmitted: (_) {
+                                            //     setState(() {
+                                            //       isDestinationEditing = false;
+                                            //     });
+                                            //   },
+                                            // )
+                                            : Align(
+                                              alignment: Alignment.centerLeft,
+                                              child: Text(
+                                                destinationController.text.isEmpty
+                                                  ? 'Where are you going?'
+                                                  : destinationController.text,
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  color: AppColors.primary,
+                                                  fontWeight: FontWeight.w500,
+                                                ),
+                                              ),
+                                            ),
+                                    ),
                                   ),
                                 ),
+                                // Container(
+                                //   padding: const EdgeInsets.symmetric(
+                                //     horizontal: 16,
+                                //     vertical: 12,
+                                //   ),
+                                //   decoration: BoxDecoration(
+                                //     color: Colors.white,
+                                //     borderRadius: BorderRadius.circular(8),
+                                //   ),
+                                //   child: const Row(
+                                //     children: [
+                                //       Expanded(
+                                //         child: Text(
+                                //           'Where are you going?',
+                                //           style: TextStyle(
+                                //             fontSize: 16,
+                                //             color: AppColors.primary,
+                                //             fontWeight: FontWeight.w500,
+                                //           ),
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   ),
+                                // ),
                               ],
                             ),
                             Positioned(
                               right: 16,
                               top: 36,
-                              child: SizedBox(width: 32, height: 32, child: Image.asset('assets/images/swap_icon.png')),
+                              child: SizedBox(
+                                width: 32,
+                                height: 32,
+                                child: Image.asset(
+                                  'assets/images/transfer.png',
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -183,24 +388,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                         const SizedBox(height: 24),
 
-                        // Find Buses Button
+                        // Create Guide Button
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton(
                             onPressed: () {
                               // Handle find buses action
-                              // context.push('/bus-list');
+                              context.push('/bus-list');
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: AppColors.primary,
                               foregroundColor: Colors.white,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                              padding: const EdgeInsets.symmetric(vertical: 12),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                               elevation: 0,
                             ),
                             child: const Text(
-                              'Find Buses',
-                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              'Create Guide',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              ),
                             ),
                           ),
                         ),
@@ -212,7 +422,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Upcoming Journey",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                   if (tickets.isEmpty)
@@ -220,16 +434,27 @@ class _HomeScreenState extends State<HomeScreen> {
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Icon(Icons.confirmation_number_outlined, size: 80, color: Colors.grey.shade400),
+                          Icon(
+                            Icons.confirmation_number_outlined,
+                            size: 80,
+                            color: Colors.grey.shade400,
+                          ),
                           const SizedBox(height: 16),
                           Text(
                             'No tickets found',
-                            style: TextStyle(fontSize: 18, color: Colors.grey.shade600, fontWeight: FontWeight.w500),
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.grey.shade600,
+                              fontWeight: FontWeight.w500,
+                            ),
                           ),
                           const SizedBox(height: 8),
                           Text(
                             'Your booked tickets will appear here',
-                            style: TextStyle(fontSize: 14, color: Colors.grey.shade500),
+                            style: TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey.shade500,
+                            ),
                           ),
                         ],
                       ),
@@ -265,7 +490,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     alignment: Alignment.centerLeft,
                     child: Text(
                       "Special Offer",
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                      ),
                     ),
                   ),
                 ],
@@ -297,7 +526,12 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (text == 'Other') const Icon(Icons.calendar_today, size: 16, color: AppColors.primary),
+            if (text == 'Other')
+              const Icon(
+                Icons.calendar_today,
+                size: 16,
+                color: AppColors.primary,
+              ),
             if (text == 'Other') const SizedBox(width: 4),
             Text(
               text,

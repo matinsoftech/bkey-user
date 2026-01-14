@@ -39,10 +39,10 @@ android {
     // Signing configurations
     signingConfigs {
         create("release") {
-            keyAlias = keyProperties.getProperty("keyAlias")
-            keyPassword = keyProperties.getProperty("keyPassword")
-            storeFile = file(keyProperties.getProperty("storeFile"))
-            storePassword = keyProperties.getProperty("storePassword")
+            // keyAlias = keyProperties.getProperty("keyAlias")
+            // keyPassword = keyProperties.getProperty("keyPassword")
+            // storeFile = file(keyProperties.getProperty("storeFile"))
+            // storePassword = keyProperties.getProperty("storePassword")
         }
     }
 
@@ -53,7 +53,7 @@ android {
         }
         release {
             // Use key.properties for signing
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.getByName("debug")
             isMinifyEnabled = false // enable later if you use ProGuard/R8
             isShrinkResources = false
         }

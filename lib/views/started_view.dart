@@ -1,6 +1,7 @@
 import 'package:bkey_user/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'dart:ui';
 
 class StartedScreen extends StatelessWidget {
   const StartedScreen({super.key});
@@ -12,37 +13,42 @@ class StartedScreen extends StatelessWidget {
       body: Stack(
         children: [
           // Decorative ellipses in top right
-          Positioned(
-            top: -150,
-            right: -190,
-            child: Container(
-              width: 400,
-              height: 400,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(200),
-                color: AppColors.primary.withOpacity(0.3),
-              ),
-            ),
-          ),
-          Positioned(
-            top: -100,
-            right: -120,
-            child: Container(
-              width: 340,
-              height: 340,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(170),
-                color: AppColors.primary.withOpacity(0.15),
-              ),
-            ),
-          ),
+          // Positioned(
+          //   top: -150,
+          //   right: -190,
+          //   child: Container(
+          //     width: 400,
+          //     height: 400,
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(200),
+          //       color: AppColors.primary.withOpacity(0.3),
+          //     ),
+          //   ),
+          // ),
+          // Positioned(
+          //   top: -100,
+          //   right: -120,
+          //   child: Container(
+          //     width: 340,
+          //     height: 340,
+          //     decoration: BoxDecoration(
+          //       borderRadius: BorderRadius.circular(170),
+          //       color: AppColors.primary.withOpacity(0.15),
+          //     ),
+          //   ),
+          // ),
           SafeArea(
             child: Column(
               children: [
                 // const Spacer(flex: 1),
-                SizedBox(height: 180),
-                Image.asset('assets/images/bkey_logo.png', height: 240, fit: BoxFit.cover, width: double.infinity),
-                Image.asset('assets/images/bus_illustration.png', height: 160, fit: BoxFit.contain),
+                // SizedBox(height: 120),
+                // Image.asset('assets/images/bkey-get.png', height: 240, fit: BoxFit.contain, width: double.infinity),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width,
+                  child: Image.asset('assets/images/bkey-get.png', height:260, fit: BoxFit.cover,),
+                ),
+                Image.asset('assets/images/bus_illustration.png', height: 240, fit: BoxFit.cover, width: double.infinity),
+                const SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.all(16),
                   child: SizedBox(
@@ -60,7 +66,7 @@ class StartedScreen extends StatelessWidget {
                       ),
                       child: const Text(
                         'Get Started',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600, letterSpacing: 0.5),
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),

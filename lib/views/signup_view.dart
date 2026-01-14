@@ -48,7 +48,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       width: 180,
                       height: 200,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/images/fin.png'), fit: BoxFit.cover),
+                        image: DecorationImage(image: AssetImage('assets/images/fin 03.png'), fit: BoxFit.cover),
                       ),
                     ),
                   ),
@@ -59,7 +59,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       width: 150,
                       height: 160,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/images/ellipse.png'), fit: BoxFit.cover),
+                        image: DecorationImage(image: AssetImage('assets/images/fin 02.png'), fit: BoxFit.cover),
                       ),
                     ),
                   ),
@@ -70,7 +70,7 @@ class _SignupScreenState extends State<SignupScreen> {
                       width: 50,
                       height: 170,
                       decoration: const BoxDecoration(
-                        image: DecorationImage(image: AssetImage('assets/images/fin1.png'), fit: BoxFit.cover),
+                        image: DecorationImage(image: AssetImage('assets/images/fin 01.png'), fit: BoxFit.cover),
                       ),
                     ),
                   ),
