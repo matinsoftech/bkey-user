@@ -99,7 +99,7 @@ class OnboardingScreen extends StatelessWidget {
                               Container(
                                 padding: const EdgeInsets.all(24),
                                 decoration: BoxDecoration(
-                                  color: AppColors.secondary,
+                                  color: const Color(0xFFFFF9C4),
                                   borderRadius: BorderRadius.circular(24),
                                 ),
                                 child: Column(
